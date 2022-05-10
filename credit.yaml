@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: credit-deployment
+  labels:
+    app: credit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: credit
+  template:
+    metadata:
+      labels:
+        app: credit
+    spec:
+      containers:
+        - name: account-container
+          image: hm716/credit
+          ports:
+            - containerPort : 8090
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
+            - name: POSTGRES_HOST_AUTH_METHOD
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configmap
+                  key: database-url
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: credit
+spec:
+  selector:
+    app: credit
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8090
+      targetPort: 8090
+      nodePort: 32000
+
+
+
+
+
+
+
+
+

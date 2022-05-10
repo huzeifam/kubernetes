@@ -8,7 +8,7 @@ metadata:
 spec:                                   # 2) specification for deployment
   replicas: 1
   selector:
-    matchLabels:                        # selctor will connect all together with this key, value name
+    matchLabels:                        # selector will connect all together with this key, value name
       app: postgres
   template:                             # template has its own metadata and spec section
     metadata:                           # and it all apply to a Pod
@@ -31,5 +31,33 @@ spec:                                   # 2) specification for deployment
             secretKeyRef:
               name: postgres-secret
               key: password
-#       - name: POSTGRES_DB
-#         value: ""
+        - name: POSTGRES_DB
+          value: "postgres-banking"
+
+#apiVersion: v1
+#kind: Service                        # what kind of configuration
+#metadata:
+#  name: postgres-service
+#spec:
+#  selector:
+#    app: postgres                    # this should be the same as label from deployment and pod
+#  ports:
+#    - protocol: TCP
+#      port: 5432
+#      targetPort: 5432              # this port should match with the port of deployment
+
+---
+# Service of POSTGRES-DB
+apiVersion: v1
+kind: Service                        # what kind of configuration
+metadata:
+  name: postgres
+spec:
+  selector:
+    app: postgres                    # this should be the same as label from deployment and pod
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432              # this port should match with the port of deployment
+      nodePort: 30500
