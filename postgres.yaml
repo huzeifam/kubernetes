@@ -1,0 +1,35 @@
+# DEPLOYMENT OF POSTGRES-DB
+apiVersion: apps/v1
+kind: Deployment                        # what kind of configuration
+metadata:
+  name: postgres-deployment                # 1) metadata name of the deployment
+  labels:
+    app: postgres
+spec:                                   # 2) specification for deployment
+  replicas: 1
+  selector:
+    matchLabels:                        # selctor will connect all together with this key, value name
+      app: postgres
+  template:                             # template has its own metadata and spec section
+    metadata:                           # and it all apply to a Pod
+      labels:
+        app: postgres                      # specify a label in form of key, value pair
+    spec:                               # 2) specification or blueprint for pod (containers)
+      containers:
+      - name: postgres
+        image: postgres                    # Docker hub image
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: password
+#       - name: POSTGRES_DB
+#         value: ""

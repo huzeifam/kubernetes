@@ -1,0 +1,12 @@
+# Service of POSTGRES-DB
+apiVersion: v1
+kind: Service                        # what kind of configuration
+metadata:
+  name: postgres-service
+spec:
+  selector:
+    app: postgres                    # this schould be the same like label from deployment and pod
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432              # this port should match with the port of deployment
