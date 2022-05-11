@@ -3,6 +3,12 @@ kind: Ingress
 metadata:
   name: banking-ingress
 spec:
+  tls:
+  - hosts:
+    - customers.de
+    - customer-accounts.de
+    - credits.de
+    secretName: banking-secret-tls
   rules:
   - host: customers.de
     http:
