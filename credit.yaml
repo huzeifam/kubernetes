@@ -44,12 +44,12 @@ metadata:
 spec:
   selector:
     app: credit
-  type: LoadBalancer
+#  type: LoadBalancer
   ports:
     - protocol: TCP
       port: 8090
       targetPort: 8090
-      nodePort: 32000
+#      nodePort: 32000
 
 
 
